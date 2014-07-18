@@ -26,10 +26,14 @@ execute "mv #{welcome_file} /etc/httpd/conf.d/welcome.conf.disabled" do
   notifies :restart, "service[httpd]"
 end
 
-# The next line overrides the attribute file
-node.default["apache"]["indexfile"] = "index2.html"
+# Use the LWRP we've created for a new site
+apache_vhost "lions" do
+  site_port 8080
+  action :create
+  notifies :restart, "service[httpd]"
+end
 
-# Iterated over the apache sites
+# Iterate over the apache sites
 node["apache"]["sites"].each do |site_name, site_data|
   # set document root
   document_root = "/srv/apache#{site_name}"
