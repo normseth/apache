@@ -1,9 +1,7 @@
 apache Cookbook
 ===============
-TODO: Enter the cookbook description here.
+This is the apache cookbook as created in Chef Fundamentals.  The initial checkin on the master branch corresponds to the end-state of the cookbook after the apache refactor lab.
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
 
 Requirements
 ------------
