@@ -3,11 +3,11 @@
 <% end -%>
 
 <VirtualHost *:<%= @port %>>
-	ServerAdmin webmaster@localhost
+ServerAdmin webmaster@localhost
 
-  DocumentRoot <%= @document_root %>
+DocumentRoot <%= @document_root %>
 	<Directory />
-		Options FollowSymLinks
+    Options FollowSymLinks
 		AllowOverride None
 	</Directory>
   <Directory <%= @document_root %>>
@@ -17,3 +17,30 @@
 		allow from all
 	</Directory>
 </VirtualHost>
+
+<% if @https_port -%>
+
+<% if @https_port != 443 -%>
+Listen <%= @https_port %>
+<% end -%>
+
+<VirtualHost *:<%= @https_port %>>
+  ServerAdmin webmaster@localhost
+	ServerName <%= @site_name %>
+	SSLEngine on
+	SSLCertificateFile <%= "#{node['apache']['cert_dir']}/#{@site_name}.crt" %>
+	SSLCertificateKeyFile <%= "#{node['apache']['key_dir']}/#{@site_name}.key" %>
+
+  DocumentRoot <%= @document_root %>
+    <Directory />
+      Options FollowSymLinks
+      AllowOverride None
+    </Directory>
+    <Directory <%= @document_root %>>
+      Options Indexes FollowSymLinks MultiViews
+      AllowOverride None
+      Order allow,deny
+      allow from all
+    </Directory>
+</VirtualHost>
+<% end -%>
