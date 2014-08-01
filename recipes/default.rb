@@ -14,6 +14,10 @@ if node["apache"]["enable_ssl"] then
 
   package "mod_ssl"
 
+  # chef_gem resource installs gem before convergence and makes available immediately
+  chef_gem "chef-vault"
+  require "chef-vault"
+
   template "/etc/httpd/conf.d/ssl.conf" do
     source 'ssl.conf.erb'
   end
@@ -79,7 +83,7 @@ node["apache"]["sites"].each do |site_name, site_data|
   # Install site certificate if SSL
   if site_data['https_port'] then
 
-    cert_data = Chef::EncryptedDataBagItem.load("certs", "#{site_name}")
+    cert_data = ChefVault::Item.load("certs", "#{site_name}")
 
     template "#{node['apache']['cert_dir']}/#{site_name}.crt" do
       source 'site.crt.erb'
